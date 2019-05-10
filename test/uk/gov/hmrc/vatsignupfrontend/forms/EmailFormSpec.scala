@@ -29,6 +29,7 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
   "The emailForm" should {
 
     val validateEmailForm = emailForm(isAgent = false)
+    val validateEmailFormWithExistingEmail= emailForm(isAgent = false, Some("test123@test.com"))
     val invalid_email_format_error_key = "error.invalid_email"
     val maxlength_error_key = "error.exceeds_max_length_email"
 
@@ -146,6 +147,14 @@ class EmailFormSpec extends PlaySpec with GuiceOneAppPerSuite {
     "validate that email allows max length" in {
       val errors = validateEmailForm.bind(Map(email -> ("a" * MaxLengthEmail))).errors
       errors should not contain FormError(email, maxlength_error_key)
+    }
+
+    "have an email if an email has already been submitted" in {
+      validateEmailFormWithExistingEmail.form.value shouldBe Some("test123@test.com")
+    }
+
+    "not have an email if an email has not already been submitted" in {
+      validateEmailForm.form.value shouldBe None
     }
   }
 

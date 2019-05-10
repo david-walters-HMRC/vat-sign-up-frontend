@@ -63,8 +63,8 @@ object EmailForm {
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.CaseOption._
   import uk.gov.hmrc.vatsignupfrontend.forms.prevalidation.TrimOption._
 
-  def emailForm(isAgent: Boolean) = PreprocessedForm(
-    validation = emailValidationForm(isAgent = isAgent),
+  def emailForm(isAgent: Boolean, agentEmail: Option[String] = None) = PreprocessedForm(
+    validation = agentEmail.fold(emailValidationForm(isAgent = isAgent))(emailValidationForm(isAgent = isAgent).fill),
     trimRules = Map(email -> all),
     caseRules = Map(email -> lower)
   )
